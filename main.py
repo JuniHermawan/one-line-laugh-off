@@ -86,11 +86,16 @@ def score(line, traits):
 
 
 def pick():
-    """Return (line, score) of the best candidate. Ties break by order."""
+    """Return (line, score) of the best candidate.
+
+    Ties break toward the shorter line: when two jokes score the same,
+    the one that says it in fewer words wins on economy.
+    """
     best_line, best_score = None, None
     for line, traits in CANDIDATES:
         s = score(line, traits)
-        if best_score is None or s > best_score:
+        if (best_score is None or s > best_score
+                or (s == best_score and len(line) < len(best_line))):
             best_line, best_score = line, s
     return best_line, best_score
 
